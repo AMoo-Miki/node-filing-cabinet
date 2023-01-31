@@ -4,6 +4,8 @@ const path = require('path');
 const debug = require('debug')('cabinet');
 const {createMatchPath} = require('tsconfig-paths');
 const fs = require('fs');
+const ts = require('typescript');
+
 /*
  * most js resolver are lazy-loaded (only required when needed)
  * e.g. dont load requirejs when we only have commonjs modules to resolve
@@ -16,7 +18,6 @@ let resolve;
 let amdLookup;
 const stylusLookup = require('stylus-lookup');
 const sassLookup = require('sass-lookup');
-let ts;
 
 let resolveDependencyPath;
 const appModulePath = require('app-module-path');
@@ -153,10 +154,6 @@ function getCompilerOptionsFromTsConfig(tsConfig) {
     if (cachedCompilerOptions) {
       debug('found parsed tsconfig in cache');
       return cachedCompilerOptions;
-    }
-
-    if (!ts) {
-      ts = require('typescript');
     }
 
     if (typeof tsConfig === 'string') {
@@ -400,6 +397,7 @@ function resolveWebpackPath({dependency, filename, directory, webpackConfig}) {
   const cachedResolvedConfig = getParsedConfigFromCache(webpackConfig);
   if (cachedResolvedConfig) {
     debug('found resolved webpack config in cache');
+    resolveConfig = cachedResolvedConfig;
   } else {
     let loadedConfig;
 

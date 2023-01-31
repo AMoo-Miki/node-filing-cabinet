@@ -10,6 +10,8 @@ const mockAST = require('./ast');
 
 const cabinet = require('../index');
 
+const normalize = name => process.platform === 'win32' ? name.replace(/\\/g, '/') : name;
+
 describe('filing-cabinet', function() {
   describe('JavaScript', function() {
     it('dangles off its supported file extensions', function() {
@@ -93,7 +95,7 @@ describe('filing-cabinet', function() {
           }
         });
 
-        assert.equal(result, path.join(__dirname, 'js/es6/bar.js'));
+        assert.equal(result, normalize(path.join(__dirname, 'js/es6/bar.js')));
       });
 
       describe('when given a lazy import with interpolation', function() {
@@ -141,7 +143,7 @@ describe('filing-cabinet', function() {
           directory: path.join(__dirname, 'js/amd/')
         });
 
-        assert.equal(result, path.join(__dirname, 'js/amd/bar.js'));
+        assert.equal(result, normalize(path.join(__dirname, 'js/amd/bar.js')));
       });
 
       it('passes along arguments', function() {
@@ -154,7 +156,7 @@ describe('filing-cabinet', function() {
           directory: path.join(__dirname, 'js/amd/')
         });
 
-        assert.equal(result, path.join(__dirname, 'js/amd/bar.js'));
+        assert.equal(result, normalize(path.join(__dirname, 'js/amd/bar.js')));
       });
     });
 
